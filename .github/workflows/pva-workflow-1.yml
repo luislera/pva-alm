@@ -1,4 +1,4 @@
-name: pva-workflow
+name: pva-workflow-1
 on:
   workflow_dispatch:
     inputs:
