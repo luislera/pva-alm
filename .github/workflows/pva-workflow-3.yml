@@ -8,7 +8,7 @@ on:
       environment:
         required: true
         description: "GitHub environment name to deploy to"
-        default: prod
+        default: PRD
 env:
   workflow_scripts_path: .github/workflows/scripts
 
