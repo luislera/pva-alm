@@ -2,32 +2,23 @@ name: pva-workflow-1
 on:
   workflow_dispatch:
     inputs:
-      solution_name:
-        description: "name of the Solution in Dataverse environment"
+      environment:
+        description: "GitHub environment name to deploy to"
         required: true
-        default: MicaSolution
-      environment_url:
-        description: "http endpoint of your Dataverse environment"
-        required: true
-        default: "https://orgea394ded.crm.dynamics.com/"
-      source_branch:
-        description: "source branch"
-        required: true
-        default: main
+        default: "DEV"
       branch_to_create:
-        description: "branch to create"
+        description: "Branch to create"
         required: false
-        default: "init2"
-      commit_message:
-        description: "message to provide for the commit"
-        required: true
-        default: "init message"
+        default: ""
 env:
   workflow_scripts_path: .github/workflows/scripts
+  source_branch: main
+  commit_message: "default commit message"
 
 jobs:
   export-unpack-commit-solution:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
 
@@ -43,11 +34,11 @@ jobs:
               workflow_id: 'export-unpack-commit-solution.yml',
               ref: '${{ github.ref }}',
               inputs: {
-                solution_name: '${{ github.event.inputs.solution_name }}',
-                environment_url: '${{ github.event.inputs.environment_url }}',
-                source_branch: '${{ github.event.inputs.source_branch }}',
+                solution_name: '${{ secrets.SOLUTION_NAME }}',
+                environment_url: '${{ secrets.ENVIRONMENT_URL }}',
+                source_branch: '${{ env.source_branch }}',
                 branch_to_create: '${{ github.event.inputs.branch_to_create }}',
-                commit_message: '${{ github.event.inputs.commit_message }}'
+                commit_message: '${{ env.commit_message }}'
               }
             })
 
