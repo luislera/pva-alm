@@ -31,6 +31,7 @@ function Enable-Flows ($tenantId, $clientId, $clientSecret, $environmentUrl, $so
                 echo "connRefs: $connRefs"
                 if ($connRefs.Count -gt 0) {      
                     # Get connection
+                    echo "Get-AdminPowerAppConnection -EnvironmentName $environmentName -Filter $connectionRefConfig"
                     $connections = Get-AdminPowerAppConnection -EnvironmentName $environmentName -Filter $connectionRefConfig.ConnectionId
                     echo "-conn: $conn"
                     echo "connections: $connections"
