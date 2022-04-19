@@ -5,7 +5,7 @@ on:
       environment:
         description: "GitHub environment name to deploy to"
         required: true
-        default: "DEV"
+        default: "PR"
       branch_to_create:
         description: "Branch to sync and merge"
         required: false
