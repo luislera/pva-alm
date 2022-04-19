@@ -25,6 +25,7 @@ jobs:
         id: pull
         uses: tretuna/sync-branches@1.4.0
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
           FROM_BRANCH: ${{ github.event.inputs.from_branch }}
           TO_BRANCH: ${{ github.event.inputs.to_branch }}
+          PULL_REQUEST_TITLE: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
