@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "GitHub environment name to deploy to"
+        description: "GitHub environment name"
         required: true
         default: "DEV"
       branch_to_create:
