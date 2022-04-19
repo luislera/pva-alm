@@ -13,7 +13,7 @@
       "displayName": "Lesson 1 - A simple topic",
       "description": "Lesson 1 - This lesson will show you how you can create a simple topic with one conditional branch.\n\nOver the next few lessons, we will show how to add and define variables, conditions and entities.\n\nWelcome to Power Virtual Agents!",
       "createdTime": "2019-01-15T00:00:00Z",
-      "updatedTime": "2022-04-14T17:13:26.4956598Z",
+      "updatedTime": "2022-04-18T18:52:53.7520133Z",
       "createdUserId": "user0",
       "updatedUserId": "2eb57154-3b52-4d3a-bb10-1b83d78c6b69"
     }
@@ -26,13 +26,19 @@
           "botMessageId": "159e7c92-8871-41a0-a739-9f67085f995f",
           "nodeType": "BotMessageNode",
           "id": "e901982c-a22d-4074-b8c7-f7842977a047",
-          "defaultTargetNodeId": "1f6c0946-4d56-4714-96f5-15e2247e953b"
+          "defaultTargetNodeId": "049e70f5-42e1-45ee-b817-fc73f6e6c7b1"
         },
         {
           "botMessageId": "614e2fa3-2cf0-42e3-a2eb-18f9fb274ee6",
           "nodeType": "BotMessageNode",
           "id": "1f6c0946-4d56-4714-96f5-15e2247e953b",
           "defaultTargetNodeId": "6e127cd1-99ff-4c5e-8f3e-9ae93c0d4777"
+        },
+        {
+          "botMessageId": "1978e40c-7ac7-4bb7-9cfe-40bd0f1f38df",
+          "nodeType": "BotMessageNode",
+          "id": "049e70f5-42e1-45ee-b817-fc73f6e6c7b1",
+          "defaultTargetNodeId": "1f6c0946-4d56-4714-96f5-15e2247e953b"
         }
       ],
       "dialogChangeNodes": [
@@ -45,7 +51,7 @@
       "id": "new_topic_c3816fa51ce746a7bbc7a8e3c5978c88_33d5123770ba4daeafae51b361ddc80a",
       "displayName": "Dialog",
       "createdTime": "2019-01-15T00:00:00Z",
-      "updatedTime": "2022-04-14T17:13:26.4956598Z",
+      "updatedTime": "2022-04-18T18:52:53.7520133Z",
       "createdUserId": "user0",
       "updatedUserId": "2eb57154-3b52-4d3a-bb10-1b83d78c6b69"
     }
@@ -76,6 +82,19 @@
       "updatedTime": "2022-04-14T17:13:26.4956598Z",
       "createdUserId": "user0",
       "updatedUserId": "2eb57154-3b52-4d3a-bb10-1b83d78c6b69"
+    },
+    {
+      "channelContent": {
+        "web": {
+          "contentFormat": "Markdown",
+          "content": "DEV Env"
+        }
+      },
+      "id": "1978e40c-7ac7-4bb7-9cfe-40bd0f1f38df",
+      "createdTime": "2022-04-18T18:52:47.872Z",
+      "updatedTime": "2022-04-18T18:52:47.872Z",
+      "createdUserId": "user-0",
+      "updatedUserId": "user-0"
     }
   ]
 }
