@@ -75,7 +75,6 @@ jobs:
         id: delete-and-import-unmanaged-solution
         uses: actions/github-script@v5
         with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
