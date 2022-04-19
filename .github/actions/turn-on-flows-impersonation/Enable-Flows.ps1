@@ -26,11 +26,14 @@ function Enable-Flows ($tenantId, $clientId, $clientSecret, $environmentUrl, $so
         foreach ($connectionRefConfig in $deploymentSettings.ConnectionReferences) {
             if ($connectionRefConfig.LogicalName -ne '' -and $connectionRefConfig.ConnectionId -ne '') {
                 # Get the connection reference
+                echo "connectionRefConfig: $connectionRefConfig"
                 $connRefs = Get-CrmRecords -conn $conn -EntityLogicalName connectionreference -FilterAttribute "connectionreferencelogicalname" -FilterOperator "eq" -FilterValue $connectionRefConfig.LogicalName
+                echo "connRefs: $connRefs"
                 if ($connRefs.Count -gt 0) {      
                     # Get connection
                     $connections = Get-AdminPowerAppConnection -EnvironmentName $environmentName -Filter $connectionRefConfig.ConnectionId
-                        
+                    echo "-conn: $conn"
+                    echo "connections: $connections"
                     # Get Dataverse systemuserid for the system user that maps to the aad user guid that created the connection 
                     $systemusers = Get-CrmRecords -conn $conn -EntityLogicalName systemuser -FilterAttribute "azureactivedirectoryobjectid" -FilterOperator "eq" -FilterValue $connections[0].CreatedBy.id
                     if ($systemusers.Count -gt 0) {
