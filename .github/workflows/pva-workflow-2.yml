@@ -80,12 +80,11 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'delete-and-import-unmanaged-solution.yml',
+              workflow_id: 'delete-unmanaged-solution-and-components-from-environment.yml',
               ref: '${{ github.ref }}',
               inputs: {
                 solution_name: '${{ secrets.SOLUTION_NAME }}',
-                environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-                ref: '${{ github.ref }}'
+                environment_url: '${{ secrets.ENVIRONMENT_URL }}'
               }
             })
 
@@ -102,7 +101,7 @@ jobs:
               let workflowLog = await github.rest.actions.listWorkflowRuns({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                workflow_id: 'delete-and-import-unmanaged-solution.yml',
+                workflow_id: 'delete-unmanaged-solution-and-components-from-environment.yml',
                 per_page: 1
               })
               
