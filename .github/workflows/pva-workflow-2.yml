@@ -5,7 +5,7 @@ on:
       environment:
         description: "GitHub environment name to deploy to"
         required: true
-        default: "DEV"
+        default: "PR"
       branch_to_create:
         description: "Branch to sync and merge"
         required: false
@@ -67,6 +67,7 @@ jobs:
 
   delete-and-import-unmanaged-solution:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     needs: sync-unmanaged-solution
     steps:
       - uses: actions/checkout@v2    
