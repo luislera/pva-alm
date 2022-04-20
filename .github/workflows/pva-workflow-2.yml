@@ -6,17 +6,62 @@ on:
         description: "GitHub environment name to deploy to"
         required: true
         default: "PR"
-      branch_to_create:
-        description: "Branch to sync and merge"
-        required: false
-        default: ""
 env:
   workflow_scripts_path: .github/workflows/scripts
-  source_branch: main
 
 jobs:
+  execute-pva-workflow-1:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: pva-workflow-1
+        id: pva-workflow-1
+        uses: actions/github-script@v5
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'pva-workflow-1.yml',
+              ref: '${{ github.ref }}',
+              inputs: {
+                solution_name: '${{ secrets.SOLUTION_NAME }}',
+                environment_url: '${{ secrets.ENVIRONMENT_URL }}'
+              }
+            })
+
+      - name: check-pva-workflow-1-status
+        id: check-pva-workflow-1-status
+        uses: actions/github-script@v5
+        with:
+          script: |
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let currentStatus = null;
+            sleep(2000)
+
+            do {
+              let workflowLog = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'pva-workflow-1.yml',
+                per_page: 1
+              })
+
+              if (workflowLog.data.total_count > 0) {
+                currentStatus = workflowLog.data.workflow_runs[0].status
+              }
+              else {
+                break
+              }
+
+              console.log('pva-workflow-1: ' + currentStatus)
+              sleep(20000)
+            } while (currentStatus != 'completed');
+
   sync-unmanaged-solution:
     runs-on: ubuntu-latest
+    needs: execute-pva-workflow-1
     steps:
       - uses: actions/checkout@v2
 
@@ -32,8 +77,8 @@ jobs:
               workflow_id: 'sync-unmanaged-solution.yml',
               ref: '${{ github.ref }}',
               inputs: {
-                from_branch: '${{ env.source_branch }}',
-                to_branch: '${{ github.event.inputs.branch_to_create }}'
+                from_branch: '${{ secrets.SOURCE_BRANCH }}',
+                to_branch: '${{ secrets.BRANCH_TO_CREATE }}'
               }
             })
 
@@ -53,7 +98,7 @@ jobs:
                 workflow_id: 'sync-unmanaged-solution.yml',
                 per_page: 1
               })
-              
+
               if (workflowLog.data.total_count > 0) {
                 currentStatus = workflowLog.data.workflow_runs[0].status
               }
@@ -64,81 +109,3 @@ jobs:
               console.log('sync-unmanaged-solution: ' + currentStatus)
               sleep(20000)
             } while (currentStatus != 'completed');
-
-  delete-and-import-unmanaged-solution:
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    needs: sync-unmanaged-solution
-    steps:
-      - uses: actions/checkout@v2    
-      - name: delete-and-import-unmanaged-solution
-        id: delete-and-import-unmanaged-solution
-        uses: actions/github-script@v5
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'delete-unmanaged-solution-and-components-from-environment.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                solution_name: '${{ secrets.SOLUTION_NAME }}',
-                environment_url: '${{ secrets.ENVIRONMENT_URL }}'
-              }
-            })
-
-      - name: check-delete-and-import-unmanaged-solution-workflow-status
-        id: check-delete-and-import-unmanaged-solution-workflow-status
-        uses: actions/github-script@v5
-        with:
-          script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'delete-unmanaged-solution-and-components-from-environment.yml',
-                per_page: 1
-              })
-              
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-
-              console.log('delete-and-import-unmanaged-solution: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
-
-  create-pr-with-solution:
-    runs-on: ubuntu-latest
-    needs: delete-and-import-unmanaged-solution
-    steps:
-      - name: create-pr-with-solution
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
-          script: |
-            const { repo, owner } = context.repo;
-            const result = await github.rest.pulls.create({
-              title: '[PR] ${{ github.event.inputs.branch_to_create }} into ${{ github.ref_name }}',
-              owner,
-              repo,
-              head: '${{ github.event.inputs.branch_to_create }}',
-              base: '${{ github.ref_name }}',
-              body: [
-                'This PR is auto-generated by',
-                '[actions/github-script](https://github.com/actions/github-script).'
-              ].join('\n')
-            });
-            github.rest.issues.addLabels({
-              owner,
-              repo,
-              issue_number: result.data.number,
-              labels: ['automated pr']
-            });
