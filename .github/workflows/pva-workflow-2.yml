@@ -19,6 +19,7 @@ jobs:
         id: pva-workflow-1
         uses: actions/github-script@v5
         with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
@@ -60,6 +61,7 @@ jobs:
 
   sync-unmanaged-solution:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     needs: execute-pva-workflow-1
     steps:
       - uses: actions/checkout@v2
