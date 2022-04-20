@@ -6,13 +6,8 @@ on:
         description: "GitHub environment name"
         required: true
         default: "DEV"
-      branch_to_create:
-        description: "Branch to create"
-        required: false
-        default: ""
 env:
   workflow_scripts_path: .github/workflows/scripts
-  source_branch: main
   commit_message: "default commit message"
 
 jobs:
@@ -36,8 +31,8 @@ jobs:
               inputs: {
                 solution_name: '${{ secrets.SOLUTION_NAME }}',
                 environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-                source_branch: '${{ env.source_branch }}',
-                branch_to_create: '${{ github.event.inputs.branch_to_create }}',
+                source_branch: '${{ secrets.SOURCE_BRANCH }}',
+                branch_to_create: '${{ secrets.BRANCH_TO_CREATE }}',
                 commit_message: '${{ env.commit_message }}'
               }
             })
@@ -58,7 +53,7 @@ jobs:
                 workflow_id: 'export-unpack-commit-solution.yml',
                 per_page: 1
               })
-              
+
               if (workflowLog.data.total_count > 0) {
                 currentStatus = workflowLog.data.workflow_runs[0].status
               }
