@@ -27,7 +27,7 @@ jobs:
               workflow_id: 'pva-workflow-1.yml',
               ref: '${{ github.ref }}',
               inputs: {
-                environment: '${{ secrets.SOLUTION_NAME }}',
+                environment: '${{ secrets.ENVIRONMENT_URL }}',
               }
             })
 
