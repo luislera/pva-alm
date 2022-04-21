@@ -24,7 +24,7 @@ jobs:
             let branch = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: '${{ secrets.BRANCH_TO_CREATE }}'
+              ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
 
             console.log(branch)
