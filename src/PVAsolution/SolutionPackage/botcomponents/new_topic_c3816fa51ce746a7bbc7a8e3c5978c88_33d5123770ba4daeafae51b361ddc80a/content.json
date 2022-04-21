@@ -5,7 +5,8 @@
         "When are you closed",
         "When are you open",
         "Store hours",
-        "Daily open hours"
+        "Daily open hours",
+        "Test trigger"
       ],
       "dialogId": "new_topic_c3816fa51ce746a7bbc7a8e3c5978c88_33d5123770ba4daeafae51b361ddc80a",
       "isTriggeringEnabled": true,
