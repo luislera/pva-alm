@@ -31,7 +31,7 @@ jobs:
               inputs: {
                 solution_name: '${{ secrets.SOLUTION_NAME }}',
                 environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-                ref: '${{ github.ref }}'
+                ref: '${{ secrets.BRANCH_TO_CREATE }}'
               }
             })
 
