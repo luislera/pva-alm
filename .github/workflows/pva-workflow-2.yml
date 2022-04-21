@@ -21,12 +21,14 @@ jobs:
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let branch = await github.rest.git.getRef({
+            let branch = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
 
+            console.log(branch)
+            /*
             if (branch.data.message != 'Not Found')
             {
               await github.rest.git.deleteRef({
@@ -35,6 +37,7 @@ jobs:
                 ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
               })
             }
+            */
 
       - name: check-branch-existence-2
         id: check-branch-existence-2
