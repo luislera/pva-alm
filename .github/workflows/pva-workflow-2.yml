@@ -15,28 +15,8 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
-      - name: check-branch-existence
-        id: check-branch-existence
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            let branch = await github.rest.git.listMatchingRefs({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
-            })
-
-            if (branch.data.length > 0) {
-              await github.rest.git.deleteRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
-              })
-            }
-
-      - name: pva-workflow-1
-        id: pva-workflow-1
+      - name: run-pva-workflow-1
+        id: run-pva-workflow-1
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
