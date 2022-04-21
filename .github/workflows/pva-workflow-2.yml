@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: check-branch-existence
+        continue-on-error: true
         id: check-branch-existence
         uses: actions/github-script@v5
         with:
