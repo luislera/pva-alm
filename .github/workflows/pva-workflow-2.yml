@@ -27,4 +27,12 @@ jobs:
               ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
 
-            console.log(branch)
+            if (branch.data != null)
+            {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
+              })
+            }
+
