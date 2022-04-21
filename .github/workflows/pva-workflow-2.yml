@@ -27,7 +27,7 @@ jobs:
               ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
 
-            if (branch.data != null)
+            if (branch.data.message != 'Not Found')
             {
               await github.rest.git.deleteRef({
                 owner: context.repo.owner,
