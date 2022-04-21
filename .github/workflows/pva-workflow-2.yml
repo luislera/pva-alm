@@ -16,7 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: check-branch-existence
-        continue-on-error: true
         id: check-branch-existence
         uses: actions/github-script@v5
         with:
@@ -37,3 +36,20 @@ jobs:
               })
             }
 
+      - name: check-branch-existence-2
+        id: check-branch-existence-2
+        if: ${{ failure() }}
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+          script: |
+            console.log('job failed')
+
+      - name: check-branch-existence-3
+        id: check-branch-existence-3
+        if: ${{ success() }}
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+          script: |
+            console.log('job succeed')
