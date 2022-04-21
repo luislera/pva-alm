@@ -27,19 +27,12 @@ jobs:
               ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
 
-            console.log(branch)
-
-            if (branch.data.length > 0)
-            {
-              console.log('delete branch')
+            if (branch.data.length > 0) {
               await github.rest.git.deleteRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
               })
-            }
-            else {
-              console.log('no branches found')
             }
 
       - name: pva-workflow-1
@@ -86,15 +79,15 @@ jobs:
               sleep(20000)
             } while (currentStatus != 'completed');
 
-  sync-unmanaged-solution:
+  sync-from-main-branch:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     needs: execute-pva-workflow-1
     steps:
       - uses: actions/checkout@v2
 
-      - name: sync-unmanaged-solution
-        id: sync-unmanaged-solution
+      - name: sync-from-main
+        id: sync-from-main
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
@@ -102,7 +95,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'sync-unmanaged-solution.yml',
+              workflow_id: 'sync-from-main.yml',
               ref: '${{ github.ref }}',
               inputs: {
                 from_branch: '${{ secrets.SOURCE_BRANCH }}',
@@ -110,8 +103,8 @@ jobs:
               }
             })
 
-      - name: check-sync-unmanaged-solution-workflow-status
-        id: check-sync-unmanaged-solution-workflow-status
+      - name: check-sync-from-main-workflow-status
+        id: check-sync-from-main-workflow-status
         uses: actions/github-script@v5
         with:
           script: |
@@ -123,7 +116,7 @@ jobs:
               let workflowLog = await github.rest.actions.listWorkflowRuns({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                workflow_id: 'sync-unmanaged-solution.yml',
+                workflow_id: 'sync-from-main.yml',
                 per_page: 1
               })
 
@@ -134,6 +127,6 @@ jobs:
                 break
               }
 
-              console.log('sync-unmanaged-solution: ' + currentStatus)
+              console.log('sync-from-main: ' + currentStatus)
               sleep(20000)
             } while (currentStatus != 'completed');
