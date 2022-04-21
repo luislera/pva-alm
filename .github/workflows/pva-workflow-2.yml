@@ -28,31 +28,16 @@ jobs:
             })
 
             console.log(branch)
-            /*
-            if (branch.data.message != 'Not Found')
+
+            if (branch.data.length > 0)
             {
+              console.log('delete branch')
               await github.rest.git.deleteRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
               })
             }
-            */
-
-      - name: check-branch-existence-2
-        id: check-branch-existence-2
-        if: ${{ failure() }}
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            console.log('job failed')
-
-      - name: check-branch-existence-3
-        id: check-branch-existence-3
-        if: ${{ success() }}
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            console.log('job succeed')
+            else {
+              console.log('no branches found')
+            }
