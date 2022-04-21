@@ -14,98 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: pva-workflow-1
-        id: pva-workflow-1
+      - name: check-branch-existence
+        id: check-branch-existence
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
+            let branch = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'pva-workflow-1.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                environment: '${{ github.event.inputs.environment }}',
-              }
+              ref: '${{ secrets.BRANCH_TO_CREATE }}'
             })
 
-      - name: check-pva-workflow-1-status
-        id: check-pva-workflow-1-status
-        uses: actions/github-script@v5
-        with:
-          script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'pva-workflow-1.yml',
-                per_page: 1
-              })
-
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-
-              console.log('pva-workflow-1: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
-
-  sync-unmanaged-solution:
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    needs: execute-pva-workflow-1
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: sync-unmanaged-solution
-        id: sync-unmanaged-solution
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'sync-unmanaged-solution.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                from_branch: '${{ secrets.SOURCE_BRANCH }}',
-                to_branch: '${{ secrets.BRANCH_TO_CREATE }}'
-              }
-            })
-
-      - name: check-sync-unmanaged-solution-workflow-status
-        id: check-sync-unmanaged-solution-workflow-status
-        uses: actions/github-script@v5
-        with:
-          script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'sync-unmanaged-solution.yml',
-                per_page: 1
-              })
-
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-
-              console.log('sync-unmanaged-solution: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
+            console.log(branch)
