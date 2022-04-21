@@ -6,7 +6,7 @@ on:
       environment:
         description: "GitHub environment name to import the solution"
         required: true
-        default: "PR"
+        default: "DEV"
 
 env:
   workflow_scripts_path: .github/workflows/scripts
