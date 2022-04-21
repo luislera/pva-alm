@@ -5,8 +5,7 @@
         "When are you closed",
         "When are you open",
         "Store hours",
-        "Daily open hours",
-        "Test trigger"
+        "Daily open hours"
       ],
       "dialogId": "new_topic_c3816fa51ce746a7bbc7a8e3c5978c88_33d5123770ba4daeafae51b361ddc80a",
       "isTriggeringEnabled": true,
@@ -14,14 +13,14 @@
       "displayName": "Lesson 1 - A simple topic",
       "description": "Lesson 1 - This lesson will show you how you can create a simple topic with one conditional branch.\n\nOver the next few lessons, we will show how to add and define variables, conditions and entities.\n\nWelcome to Power Virtual Agents!",
       "createdTime": "2019-01-15T00:00:00Z",
-      "updatedTime": "2022-04-19T15:42:31.4538113Z",
+      "updatedTime": "2022-04-21T15:21:48.577016Z",
       "createdUserId": "user0",
       "updatedUserId": "2eb57154-3b52-4d3a-bb10-1b83d78c6b69"
     }
   ],
   "dialogs": [
     {
-      "rootNodeId": "e901982c-a22d-4074-b8c7-f7842977a047",
+      "rootNodeId": "deaa078f-3336-47c5-800d-e9a6514de4bc",
       "messageNodes": [
         {
           "botMessageId": "159e7c92-8871-41a0-a739-9f67085f995f",
@@ -33,13 +32,13 @@
           "botMessageId": "614e2fa3-2cf0-42e3-a2eb-18f9fb274ee6",
           "nodeType": "BotMessageNode",
           "id": "1f6c0946-4d56-4714-96f5-15e2247e953b",
-          "defaultTargetNodeId": "126ed9ed-cfa0-4ee0-ab80-9c634eb35236"
+          "defaultTargetNodeId": "6e127cd1-99ff-4c5e-8f3e-9ae93c0d4777"
         },
         {
-          "botMessageId": "0be96192-57c8-483e-9064-27162d856cdb",
+          "botMessageId": "f7a6540f-0efc-4880-b6be-1126ae4d9305",
           "nodeType": "BotMessageNode",
-          "id": "126ed9ed-cfa0-4ee0-ab80-9c634eb35236",
-          "defaultTargetNodeId": "6e127cd1-99ff-4c5e-8f3e-9ae93c0d4777"
+          "id": "deaa078f-3336-47c5-800d-e9a6514de4bc",
+          "defaultTargetNodeId": "e901982c-a22d-4074-b8c7-f7842977a047"
         }
       ],
       "dialogChangeNodes": [
@@ -52,7 +51,7 @@
       "id": "new_topic_c3816fa51ce746a7bbc7a8e3c5978c88_33d5123770ba4daeafae51b361ddc80a",
       "displayName": "Dialog",
       "createdTime": "2019-01-15T00:00:00Z",
-      "updatedTime": "2022-04-19T15:42:31.4538113Z",
+      "updatedTime": "2022-04-21T15:21:48.577016Z",
       "createdUserId": "user0",
       "updatedUserId": "2eb57154-3b52-4d3a-bb10-1b83d78c6b69"
     }
@@ -88,12 +87,12 @@
       "channelContent": {
         "web": {
           "contentFormat": "Markdown",
-          "content": "New message added by a developer."
+          "content": "This a modification done by a DEV."
         }
       },
-      "id": "0be96192-57c8-483e-9064-27162d856cdb",
-      "createdTime": "2022-04-19T15:42:09.877Z",
-      "updatedTime": "2022-04-19T15:42:09.877Z",
+      "id": "f7a6540f-0efc-4880-b6be-1126ae4d9305",
+      "createdTime": "2022-04-19T17:22:02.312Z",
+      "updatedTime": "2022-04-19T17:22:02.312Z",
       "createdUserId": "user-0",
       "updatedUserId": "user-0"
     }
