@@ -1,6 +1,6 @@
-name: build-solution
+name: build-solution-2
 
-description: build-solution
+description: build-solution-2
 
 inputs:
   ref:
@@ -19,10 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ inputs.ref }}
-
     - name: debug-step
       shell: bash
       run: |
