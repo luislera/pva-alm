@@ -29,6 +29,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+      - name: debug-step
+      shell: bash
+      run: |
+        echo "solution_action ${{ inputs.solution_action }}"
+        echo "secrets ${{ inputs.secrets }}"
+        echo "environment_url ${{ inputs.environment_url }}"
+        echo "environment ${{ inputs.environment }}"
+
     - name: mask-inputs
       shell: bash
       run: |
