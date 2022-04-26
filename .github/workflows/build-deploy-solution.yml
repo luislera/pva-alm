@@ -52,7 +52,7 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - id: build-solution
+      - name: build-solution
         uses: ./.github/actions/build-solution
         with:
           ref: ${{ github.event.inputs.ref }}
