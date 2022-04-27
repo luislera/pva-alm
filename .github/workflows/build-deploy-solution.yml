@@ -107,19 +107,30 @@ jobs:
 
       - name: import-solution-to-environment
         uses: microsoft/powerplatform-actions/import-solution@latest
-        #env:
-        #  import-as-holding: "${{ github.event.inputs.solution_action == 'update' && 'false' || 'true' }}"
+        env:
+          import-as-holding: "${{ github.event.inputs.solution_action == 'update' && 'false' || 'true' }}"
         with:
           environment-url: ${{ secrets.ENVIRONMENT_URL }}
-          tenant-id: ${{ env.TENANT_ID }}
-          app-id: ${{ env.CLIENT_ID }}
-          client-secret: ${{ env.CLIENT_SECRET }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          app-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
           solution-file: ${{ steps.get-solution-zip.outputs.solution_zip }}
-          import-as-holding: true
+          import-as-holding: ${{ env.import-as-holding }}
           force-overwrite: true
           use-deployment-settings-file: true
           deployment-settings-file: src/${{ github.event.inputs.solution_name }}/config/deploymentSettings.json
           run-asynchronously: true
+
+      - name: upgrade-solution
+        if: ${{ github.event.inputs.solution_action == 'upgrade' }}
+        uses: microsoft/powerplatform-actions/upgrade-solution@latest
+        with:
+          environment-url: ${{ secrets.ENVIRONMENT_URL }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          app-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+          solution-name: ${{ github.event.inputs.solution_name }}
+          async: true
 
   import-data-and-turn-on-flows:
     runs-on: windows-2022
