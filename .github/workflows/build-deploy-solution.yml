@@ -90,7 +90,7 @@ jobs:
 
       - uses: Firenza/secrets-to-env@v1.1.0
         with:
-          secrets: ${{ github.event.inputs.secrets }}
+          secrets: ${{ toJSON(secrets) }}
 
       - uses: cschleiden/replace-tokens@v1
         with:
