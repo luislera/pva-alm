@@ -7,15 +7,19 @@ on:
       ref:
         required: true
         description: "ref to build from"
+        default: "test_branch"
       sha:
         required: false
         description: "sha"
+        default: "f0c9c52ee39287c783d418b6e7cfad2364a33fff"
       solution_name:
         required: true
         description: "solution to build"
+        default: "PVAsolution"
       environment:
         required: true
         description: "environment where the build will be deployed"
+        default: "UAT"
       solution_action:
         required: true
         description: "update or upgrade the solution"
@@ -68,6 +72,7 @@ jobs:
 
   deploy-solution:
     runs-on: ubuntu-latest
+    needs: build-solution
     name: deploy solution to ${{ github.event.inputs.environment }} environment
     environment: ${{ github.event.inputs.environment }}
     steps:
