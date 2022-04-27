@@ -122,7 +122,7 @@ jobs:
 
   import-data-and-turn-on-flows:
     runs-on: windows-2022
-    needs: build-deploy-solution
+    needs: deploy-solution
     environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
