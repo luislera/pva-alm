@@ -110,6 +110,7 @@ jobs:
         #env:
         #  import-as-holding: "${{ github.event.inputs.solution_action == 'update' && 'false' || 'true' }}"
         with:
+          environment-url: ${{ secrets.ENVIRONMENT_URL }}
           tenant-id: ${{ env.TENANT_ID }}
           app-id: ${{ env.CLIENT_ID }}
           client-secret: ${{ env.CLIENT_SECRET }}
@@ -118,6 +119,7 @@ jobs:
           force-overwrite: true
           use-deployment-settings-file: true
           deployment-settings-file: src/${{ github.event.inputs.solution_name }}/config/deploymentSettings.json
+          run-asynchronously: true
 
   import-data-and-turn-on-flows:
     runs-on: windows-2022
