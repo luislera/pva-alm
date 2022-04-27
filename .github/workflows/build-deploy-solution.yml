@@ -70,12 +70,6 @@ jobs:
           solution_name: ${{ github.event.inputs.solution_name }}
           solution_package_source: "src/${{ github.event.inputs.solution_name }}/SolutionPackage"
 
-  deploy-solution:
-    runs-on: ubuntu-latest
-    needs: build-solution
-    name: deploy solution to ${{ github.event.inputs.environment }} environment
-    environment: ${{ github.event.inputs.environment }}
-    steps:
       - name: debug-step
         shell: bash
         run: |
@@ -127,7 +121,7 @@ jobs:
 
   import-data-and-turn-on-flows:
     runs-on: windows-2022
-    needs: deploy-solution
+    needs: build-solution
     environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
