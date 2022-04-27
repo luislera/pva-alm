@@ -20,11 +20,18 @@ on:
         required: true
         description: "update or upgrade the solution"
         default: "update"
+      unmanaged:
+        description: "unmanaged"
+        required: false
+        default: "false"
+      tag:
+        description: "tag"
+        required: false
 
 jobs:
-  build-deploy-solution:
+  build-solution:
     runs-on: ubuntu-latest
-    name: deploy solution to ${{ github.event.inputs.environment }} environment
+    name: build solution
     environment: ${{ github.event.inputs.environment }}
     steps:
       - if: contains(github.event.inputs.ref, 'refs/pull')
@@ -59,13 +66,59 @@ jobs:
           solution_name: ${{ github.event.inputs.solution_name }}
           solution_package_source: "src/${{ github.event.inputs.solution_name }}/SolutionPackage"
 
-      - name: deploy-solution
-        uses: ./.github/actions/deploy-solution
-        with:
-          environment_url: ${{ secrets.ENVIRONMENT_URL }}
-          solution_name: ${{ github.event.inputs.solution_name }}
-          environment: ${{ needs.get-subdomain.outputs.subdomain }}
-          secrets: ${{ toJSON(secrets) }}
+  deploy-solution:
+    runs-on: ubuntu-latest
+    name: deploy solution to ${{ github.event.inputs.environment }} environment
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: debug-step
+      shell: bash
+      run: |
+        echo "solution_action ${{ github.event.inputs.solution_action }}"
+        echo "environment ${{ github.event.inputs.environment }}"
+        echo "solution_name ${{ github.event.inputs.solution_name }}"
+
+    #- name: mask-inputs
+    #  shell: bash
+    #  run: |
+    #    echo "::add-mask::${{ github.event.inputs.environment_url }}"
+
+    - uses: Firenza/secrets-to-env@v1.1.0
+      with:
+        secrets: ${{ github.event.inputs.secrets }}
+
+    - uses: cschleiden/replace-tokens@v1
+      with:
+        files: '["src/${{ github.event.inputs.solution_name }}/config/deploymentSettings.json"]'
+
+    - name: get solution zip
+      id: get-solution-zip
+      shell: pwsh
+      run: |
+        # unmanaged means we are targeting a dev environment
+        if ([System.Convert]::ToBoolean("${{ github.event.inputs.unmanaged }}")) {
+          $files = Get-ChildItem -Path "${{ runner.temp }}/${{ github.event.inputs.solution_name }}" -Recurse | Where-Object{$_.Name.EndsWith('.zip') -and !$_.Name.EndsWith('_managed.zip')}
+        }
+        else {
+          $files = Get-ChildItem -Path "${{ runner.temp }}/${{ github.event.inputs.solution_name }}" -Recurse | Where-Object{$_.Name.EndsWith('_managed.zip')}
+        }
+
+        $solutionZip = $files[0].FullName
+        echo "::set-output name=solution_zip::$solutionZip"
+
+    - name: import-solution-to-environment
+      uses: microsoft/powerplatform-actions/import-solution@latest
+      #env:
+      #  import-as-holding: "${{ github.event.inputs.solution_action == 'update' && 'false' || 'true' }}"
+      with:
+        tenant-id: ${{ env.TENANT_ID }}
+        app-id: ${{ env.CLIENT_ID }}
+        client-secret: ${{ env.CLIENT_SECRET }}
+        solution-file: ${{ steps.get-solution-zip.outputs.solution_zip }}
+        import-as-holding: true
+        force-overwrite: true
+        use-deployment-settings-file: true
+        deployment-settings-file: src/${{ github.event.inputs.solution_name }}/config/deploymentSettings.json
 
   import-data-and-turn-on-flows:
     runs-on: windows-2022
