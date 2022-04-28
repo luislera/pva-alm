@@ -63,7 +63,7 @@ jobs:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
             let currentStatus = null;
-            sleep 2
+            sleep(2000)
 
             do {
               let workflowLog = await github.rest.actions.listWorkflowRuns({
@@ -79,7 +79,7 @@ jobs:
               else {
                 break
               }
-
+              console.log(workflowLog.data.workflow_runs[0])
               console.log('export-unpack-commit-solution status: ' + currentStatus)
               sleep(20000)
             } while (currentStatus != 'completed');
