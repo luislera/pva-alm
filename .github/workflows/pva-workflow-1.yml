@@ -63,7 +63,7 @@ jobs:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
             let currentStatus = null;
-            sleep(2000)
+            sleep 2
 
             do {
               let workflowLog = await github.rest.actions.listWorkflowRuns({
