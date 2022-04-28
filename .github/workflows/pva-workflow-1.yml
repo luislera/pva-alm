@@ -36,6 +36,11 @@ jobs:
               })
             }
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm install sleep
       - name: exec-export-unpack-commit-solution-workflow
         id: exec-export-unpack-commit-solution-workflow
         uses: actions/github-script@v5
@@ -58,7 +63,7 @@ jobs:
 
       - name: check-workflow-status
         id: check-workflow-status
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             //let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
