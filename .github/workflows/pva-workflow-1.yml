@@ -63,6 +63,7 @@ jobs:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
             let currentStatus = null;
+            let conclusion = null;
             sleep(2000)
 
             do {
@@ -75,11 +76,16 @@ jobs:
 
               if (workflowLog.data.total_count > 0) {
                 currentStatus = workflowLog.data.workflow_runs[0].status
+                conclusion = workflowLog.data.workflow_runs[0].conclusion
               }
               else {
                 break
               }
-              console.log(workflowLog.data.workflow_runs[0])
+
               console.log('export-unpack-commit-solution status: ' + currentStatus)
               sleep(20000)
             } while (currentStatus != 'completed');
+
+            if (conclusion != 'success') {
+              core.setFailed('The export-unpack-commit-solution workflow failed.')
+            }
