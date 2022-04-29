@@ -2,7 +2,7 @@ name: pva-workflow-3
 on:
   workflow_dispatch:
     inputs:
-       solution_name:
+      solution_name:
         description: "name of the Solution in Dataverse environment"
         required: true
         default: MicaSolution
