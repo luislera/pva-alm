@@ -60,7 +60,4 @@ jobs:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let result = await sleep.checkworkflow(github, context, 'export-unpack-commit-solution.yml')
-            if (result != 'success') {
-              core.setFailed('workflow failed')
-            }
+            await sleep.checkworkflow(github, context, 'export-unpack-commit-solution.yml')

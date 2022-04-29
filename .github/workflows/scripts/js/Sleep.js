@@ -10,7 +10,10 @@ const dispatchWorkflow = async (github, context, id, reference, parameters) => {
 const checkworkflow = async (github, context, id) => {
   let currentStatus = null;
   let conclusion = null;
+  let html_url = null;
   sleep(2000)
+
+  console.log('Checking status for workflow: ' + id)
   do {
     let workflowLog = await github.rest.actions.listWorkflowRuns({
       owner: context.repo.owner,
@@ -21,14 +24,18 @@ const checkworkflow = async (github, context, id) => {
     if (workflowLog.data.total_count > 0) {
       currentStatus = workflowLog.data.workflow_runs[0].status
       conclusion = workflowLog.data.workflow_runs[0].conclusion
+      html_url = workflowLog.data.workflow_runs[0].html_url
     }
     else {
       break
     }
-    console.log(id + ' status: ' + currentStatus)
+    console.log(Date.now() + ' - Status: ' + currentStatus)
     sleep(20000)
   } while (currentStatus != 'completed');
-  return conclusion
+
+  if (conclusion != 'success') {
+    core.setFailed('Workflow execution failed. For more details go to ' + html_url)
+  }
 }
 const sleep = (milliseconds) => {
   const date = Date.now();

@@ -34,10 +34,7 @@ jobs:
         with:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let result = await sleep.checkworkflow(github, context, 'pva-workflow-1.yml')
-            if (result != 'success') {
-              core.setFailed('workflow failed')
-            }
+            await sleep.checkworkflow(github, context, 'pva-workflow-1.yml')
 
   sync-from-main-branch:
     runs-on: ubuntu-latest
@@ -66,7 +63,4 @@ jobs:
         with:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let result = await sleep.checkworkflow(github, context, 'sync-from-main.yml')
-            if (result != 'success') {
-              core.setFailed('workflow failed')
-            }
+            await sleep.checkworkflow(github, context, 'sync-from-main.yml')
