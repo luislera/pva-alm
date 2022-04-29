@@ -29,7 +29,4 @@ jobs:
               if (!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
                 core.setFailed('environment does not exists')
               }
-              else {
-                console.log('ok!')
-              }
             }
