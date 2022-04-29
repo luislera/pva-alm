@@ -12,7 +12,6 @@ env:
 jobs:
   export-unpack-commit-solution:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
     steps:
       - name: check-environment-existence
         id: check-environment-existence
