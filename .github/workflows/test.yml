@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: check-env-existence
         id: check-env-existence
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
@@ -27,6 +27,6 @@ jobs:
 
             if (res.data.environments.length > 0) {
               if (!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
-                core.setFailed('environment does not exists')
+                core.setFailed('The environment does not exists.')
               }
             }
