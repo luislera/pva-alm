@@ -13,11 +13,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
     steps:
-      - uses: actions/checkout@v2
-      - name: check-branch-existence
-        id: check-branch-existence
+      - name: check-env-existence
+        id: check-env-existence
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
