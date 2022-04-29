@@ -29,6 +29,7 @@ jobs:
                 core.setFailed('The environment doesn't exits')
               }
             }
+
       - name: check-branch-existence
         id: check-branch-existence
         uses: actions/github-script@v6
@@ -47,6 +48,7 @@ jobs:
                 ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
               })
             }
+
       - name: exec-export-unpack-commit-solution-workflow
         id: exec-export-unpack-commit-solution-workflow
         uses: actions/github-script@v6
@@ -66,6 +68,7 @@ jobs:
                 commit_message: '${{ env.commit_message }}'
               }
             })
+
       - name: check-workflow-status
         id: check-workflow-status
         uses: actions/github-script@v6
