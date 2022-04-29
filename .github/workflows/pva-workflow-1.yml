@@ -25,10 +25,14 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo
             })
+
             if (res.data.environments.length > 0) {
-              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')){
-              core.setFailed('The environment doesn't exits')
-              }        
+              if (!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
+                core.setFailed('environment does not exists')
+              }
+              else {
+                console.log('ok!')
+              }
             }
       - uses: actions/checkout@v3
       - name: check-branch-existence
