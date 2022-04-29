@@ -1,62 +1,90 @@
 name: pva-workflow-3
-
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "GitHub environment name to import the solution"
+       solution_name:
+        description: "name of the Solution in Dataverse environment"
         required: true
-        default: "DEV"
+        default: MicaSolution
+      environment_url:
+        description: "http endpoint of your Dataverse environment"
+        required: true
+        default: "https://orgea394ded.crm.dynamics.com/"
+      source_branch:
+        description: "source branch"
+        required: true
+        default: main
+      branch_to_create:
+        description: "branch to create"
+        required: false
+        default: "init2"
+      commit_message:
+        description: "message to provide for the commit"
+        required: true
+        default: "init message"
 
 env:
   workflow_scripts_path: .github/workflows/scripts
 
 jobs:
+  pva-workflow-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: pva-workflow-2
+        id: pva-workflow-2
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+          script: |
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let ref = '${{ github.ref }}'
+            let params = {
+              solution_name: '${{ github.event.inputs.solution_name }}',
+              environment_url: '${{ github.event.inputs.environment_url }}',               
+              source_branch: '${{ github.event.inputs.source_branch }}',
+              branch_to_create: '${{ github.event.inputs.branch_to_create }}',
+              commit_message: '${{ github.event.inputs.commit_message }}'
+            }
+            sleep.dispatchWorkflow(github, context, 'pva-workflow-2.yml', ref, params)
+
+      - name: check-pva-workflow-2-workflow-status
+        id: check-pva-workflow-2-workflow-status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let result = await sleep.checkworkflow(github, context, 'pva-workflow-2.yml')
+            if (result != 'success') {
+              core.setFailed('workflow failed')
+            }
+
   delete-and-import-unmanaged-solution:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
       - name: delete-and-import-unmanaged-solution
         id: delete-and-import-unmanaged-solution
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'delete-and-import-unmanaged-solution.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                solution_name: '${{ secrets.SOLUTION_NAME }}',
-                environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-                ref: '${{ secrets.BRANCH_TO_CREATE }}'
-              }
-            })
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let ref = '${{ github.ref }}'
+            let params = {
+              solution_name: '${{ github.event.inputs.solution_name }}',
+              environment_url: '${{ github.event.inputs.environment_url }}',
+              ref: '${{ github.ref }}'
+            }
+            sleep.dispatchWorkflow(github, context, 'delete-and-import-unmanaged-solution.yml', ref, params)
 
       - name: check-delete-and-import-unmanaged-solution-workflow-status
         id: check-delete-and-import-unmanaged-solution-workflow-status
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'delete-and-import-unmanaged-solution.yml',
-                per_page: 1
-              })
-
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-              console.log('delete-and-import-unmanaged-solution: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
+            let result = await sleep.checkworkflow(github, context, 'delete-and-import-unmanaged-solution.yml')
+            if (result != 'success') {
+              core.setFailed('workflow failed')
+            }

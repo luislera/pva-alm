@@ -9,26 +9,13 @@ on:
 env:
   workflow_scripts_path: .github/workflows/scripts
   commit_message: "default commit message"
+
 jobs:
   export-unpack-commit-solution:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
-      - name: check-environment-existence
-        id: check-environment-existence
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            let res = await github.rest.repos.getAllEnvironments({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            })
-            if (res.data.environments.length > 0) {
-              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')){
-              core.setFailed('The environment doesnt exits')
-              }        
-            }
-
+      - uses: actions/checkout@v3
       - name: check-branch-existence
         id: check-branch-existence
         uses: actions/github-script@v6
@@ -40,6 +27,7 @@ jobs:
               repo: context.repo.repo,
               ref: 'heads/${{ secrets.BRANCH_TO_CREATE }}'
             })
+
             if (branch.data.length > 0) {
               await github.rest.git.deleteRef({
                 owner: context.repo.owner,
@@ -54,41 +42,25 @@ jobs:
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'export-unpack-commit-solution.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                solution_name: '${{ secrets.SOLUTION_NAME }}',
-                environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-                source_branch: '${{ secrets.SOURCE_BRANCH }}',
-                branch_to_create: '${{ secrets.BRANCH_TO_CREATE }}',
-                commit_message: '${{ env.commit_message }}'
-              }
-            })
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let ref = '${{ github.ref }}'
+            let params = {
+              solution_name: '${{ secrets.SOLUTION_NAME }}',
+              environment_url: '${{ secrets.ENVIRONMENT_URL }}',
+              source_branch: '${{ secrets.SOURCE_BRANCH }}',
+              branch_to_create: '${{ secrets.BRANCH_TO_CREATE }}',
+              commit_message: '${{ env.commit_message }}'
+            }
+            sleep.dispatchWorkflow(github, context, 'export-unpack-commit-solution.yml', ref, params)
 
       - name: check-workflow-status
         id: check-workflow-status
         uses: actions/github-script@v6
         with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'export-unpack-commit-solution.yml',
-                per_page: 1
-              })
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-              console.log('export-unpack-commit-solution status: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
+            let result = await sleep.checkworkflow(github, context, 'export-unpack-commit-solution.yml')
+            if (result != 'success') {
+              core.setFailed('workflow failed')
+            }
