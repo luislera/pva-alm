@@ -25,9 +25,9 @@ jobs:
             })
 
             if (res.data.environments.length > 0) {
-              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')){
+              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
                 core.setFailed('The environment doesn't exits')
-              }        
+              }
             }
       - name: check-branch-existence
         id: check-branch-existence
