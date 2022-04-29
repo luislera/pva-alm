@@ -13,7 +13,7 @@ const checkworkflow = async (github, context, id) => {
   let html_url = null;
   sleep(2000)
 
-  console.log('Checking status for workflow: ' + id)
+  console.log('Checking the status for workflow ' + id)
   do {
     let workflowLog = await github.rest.actions.listWorkflowRuns({
       owner: context.repo.owner,
@@ -29,7 +29,7 @@ const checkworkflow = async (github, context, id) => {
     else {
       break
     }
-    console.log(Date.now() + ' - Status: ' + currentStatus)
+    console.log(Date.now().toISOString() + ' - Status: ' + currentStatus)
     sleep(20000)
   } while (currentStatus != 'completed');
 
