@@ -29,7 +29,7 @@ const checkworkflow = async (github, context, id) => {
     else {
       break
     }
-    console.log(Date.now().toISOString() + ' - Status: ' + currentStatus)
+    console.log(new Date().toISOString() + ' - Status: ' + currentStatus)
     sleep(20000)
   } while (currentStatus != 'completed');
 
