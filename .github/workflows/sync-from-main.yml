@@ -23,8 +23,8 @@ jobs:
             let res = await github.rest.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: ${{ github.event.inputs.from_branch }},
-              base: ${{ github.event.inputs.to_branch }},
+              head: '${{ github.event.inputs.from_branch }}',
+              base: '${{ github.event.inputs.to_branch }}',
               title: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
             })
 
