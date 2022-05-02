@@ -62,4 +62,4 @@ jobs:
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, 'sync-from-main.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'sync-from-main.yml')
