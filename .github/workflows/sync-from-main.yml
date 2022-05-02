@@ -15,17 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Syncing from main branch
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Node
-        uses: actions/setup-node@v1
+      - name: compare-head-with-base-branch
+        uses: actions/github-script@v6
         with:
-          node-version: 12
-      - name: Opening pull request
-        id: pull
-        uses: tretuna/sync-branches@1.4.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
-          FROM_BRANCH: ${{ github.event.inputs.from_branch }}
-          TO_BRANCH: ${{ github.event.inputs.to_branch }}
-          PULL_REQUEST_TITLE: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+          script: |
+            let res = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: ${{ github.event.inputs.from_branch }},
+              base: ${{ github.event.inputs.to_branch }},
+              title: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
+            })
+
+            console.log(res)
