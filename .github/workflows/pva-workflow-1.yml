@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: check-env-existence
         id: check-env-existence
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
@@ -59,7 +59,7 @@ jobs:
 
       - name: exec-export-unpack-commit-solution-workflow
         id: exec-export-unpack-commit-solution-workflow
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
@@ -76,7 +76,7 @@ jobs:
 
       - name: check-workflow-status
         id: check-workflow-status
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
