@@ -38,6 +38,7 @@ jobs:
 
   delete-and-import-unmanaged-solution:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
       - name: delete-and-import-unmanaged-solution
@@ -49,8 +50,8 @@ jobs:
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
-              solution_name: '${{ github.event.inputs.solution_name }}',
-              environment_url: '${{ github.event.inputs.environment_url }}',
+              solution_name: '${{ secrets.SOLUTION_NAME }}',
+              environment_url: '${{ secrets.ENVIRONMENT_URL }}',
               ref: '${{ github.ref }}'
             }
             await helper.dispatchWorkflow(github, context, 'delete-and-import-unmanaged-solution.yml', ref, params)
