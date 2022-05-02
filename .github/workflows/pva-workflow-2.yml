@@ -14,99 +14,53 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: run-pva-workflow-1
         id: run-pva-workflow-1
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'pva-workflow-1.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                environment: '${{ github.event.inputs.environment }}',
-              }
-            })
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let ref = '${{ github.ref }}'
+            let params = {
+              environment: '${{ github.event.inputs.environment }}',
+            }
+            sleep.dispatchWorkflow(github, context, 'pva-workflow-1.yml', ref, params)
 
       - name: check-pva-workflow-1-status
         id: check-pva-workflow-1-status
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'pva-workflow-1.yml',
-                per_page: 1
-              })
-
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-
-              console.log('pva-workflow-1: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
+            await sleep.checkworkflow(github, context, 'pva-workflow-1.yml')
 
   sync-from-main-branch:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     needs: execute-pva-workflow-1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: sync-from-main
         id: sync-from-main
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'sync-from-main.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                from_branch: '${{ secrets.SOURCE_BRANCH }}',
-                to_branch: '${{ secrets.BRANCH_TO_CREATE }}'
-              }
-            })
+            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let ref = '${{ github.ref }}'
+            let params = {
+              from_branch: '${{ secrets.SOURCE_BRANCH }}',
+              to_branch: '${{ secrets.BRANCH_TO_CREATE }}'
+            }
+            sleep.dispatchWorkflow(github, context, 'sync-from-main.yml', ref, params)
 
       - name: check-sync-from-main-workflow-status
         id: check-sync-from-main-workflow-status
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let currentStatus = null;
-            sleep(2000)
-
-            do {
-              let workflowLog = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'sync-from-main.yml',
-                per_page: 1
-              })
-
-              if (workflowLog.data.total_count > 0) {
-                currentStatus = workflowLog.data.workflow_runs[0].status
-              }
-              else {
-                break
-              }
-
-              console.log('sync-from-main: ' + currentStatus)
-              sleep(20000)
-            } while (currentStatus != 'completed');
+            await sleep.checkworkflow(github, context, 'sync-from-main.yml')

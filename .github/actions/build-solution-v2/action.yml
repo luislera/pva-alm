@@ -1,6 +1,6 @@
-name: build-solution
+name: build-solution-2
 
-description: build-solution
+description: build-solution-2
 
 inputs:
   ref:
@@ -19,10 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ inputs.ref }}
-
     - name: debug-step
       shell: bash
       run: |
@@ -80,6 +76,13 @@ runs:
     # So we set the path to pac that ships with the Actions
     - name: set-pac-path
       uses: ./.github/actions/set-pac-path
+
+    - name: debug-step-2
+      shell: bash
+      run: |
+        echo "solution_name ${{ inputs.solution_name }}"
+        echo "dev_build ${{ inputs.dev_build }}"
+        echo "solution_package_source ${{ inputs.solution_package_source }}"
 
     - name: pack msapp files
       shell: pwsh
