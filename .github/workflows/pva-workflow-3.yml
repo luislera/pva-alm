@@ -2,26 +2,10 @@ name: pva-workflow-3
 on:
   workflow_dispatch:
     inputs:
-      solution_name:
-        description: "name of the Solution in Dataverse environment"
+      environment:
+        description: "GitHub environment name to import the solution"
         required: true
-        default: MicaSolution
-      environment_url:
-        description: "http endpoint of your Dataverse environment"
-        required: true
-        default: "https://orgea394ded.crm.dynamics.com/"
-      source_branch:
-        description: "source branch"
-        required: true
-        default: main
-      branch_to_create:
-        description: "branch to create"
-        required: false
-        default: "init2"
-      commit_message:
-        description: "message to provide for the commit"
-        required: true
-        default: "init message"
+        default: "DEV"
 
 env:
   workflow_scripts_path: .github/workflows/scripts
@@ -40,11 +24,7 @@ jobs:
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
-              solution_name: '${{ github.event.inputs.solution_name }}',
-              environment_url: '${{ github.event.inputs.environment_url }}',
-              source_branch: '${{ github.event.inputs.source_branch }}',
-              branch_to_create: '${{ github.event.inputs.branch_to_create }}',
-              commit_message: '${{ github.event.inputs.commit_message }}'
+              environment: '${{ github.event.inputs.environment }}'
             }
             await helper.dispatchWorkflow(github, context, 'pva-workflow-2.yml', ref, params)
 
