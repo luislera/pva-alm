@@ -13,24 +13,23 @@ env:
 jobs:
   check-environment-existence:
     runs-on: ubuntu-latest
-      environment: ${{ github.event.inputs.environment }}
-      steps:
-        - name: check-environment-existence
-        id: check-environment-existence
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            let res = await github.rest.repos.getAllEnvironments({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            })
+    steps:
+      - name: check-environment-existence
+      id: check-environment-existence
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+        script: |
+          let res = await github.rest.repos.getAllEnvironments({
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          })
 
-            if (res.data.environments.length > 0) {
-              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
-                core.setFailed('The environment does not exists!')
-              }
+          if (res.data.environments.length > 0) {
+            if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
+              core.setFailed('The environment does not exists!')
             }
+          }
 
   export-unpack-commit-solution:
     runs-on: ubuntu-latest
