@@ -27,12 +27,12 @@ env:
   workflow_scripts_path: .github/workflows/scripts
 
 jobs:
-  pva-workflow-2:
+  execute-pva-workflow-2:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: pva-workflow-2
-        id: pva-workflow-2
+      - name: run-pva-workflow-2
+        id: run-pva-workflow-2
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
