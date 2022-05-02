@@ -7,7 +7,8 @@ const dispatchWorkflow = async (github, context, id, reference, parameters) => {
     inputs: parameters
   })
 }
-const checkworkflow = async (github, context, id) => {
+
+const checkworkflow = async (github, context, core, id) => {
   let currentStatus = null;
   let conclusion = null;
   let html_url = null;
@@ -29,7 +30,7 @@ const checkworkflow = async (github, context, id) => {
     else {
       break
     }
-    console.log(new Date().toISOString() + ' - Status: ' + currentStatus)
+    console.log(new Date().toISOString() + ' - status: ' + currentStatus)
     sleep(20000)
   } while (currentStatus != 'completed');
 
@@ -37,6 +38,7 @@ const checkworkflow = async (github, context, id) => {
     core.setFailed('Workflow execution failed. For more details go to ' + html_url)
   }
 }
+
 const sleep = (milliseconds) => {
   const date = Date.now();
   let currentDate = null;
@@ -44,7 +46,8 @@ const sleep = (milliseconds) => {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
+
 module.exports = {
   dispatchWorkflow,
-  checkworkflow
+  checkWorkflowStatus
 }

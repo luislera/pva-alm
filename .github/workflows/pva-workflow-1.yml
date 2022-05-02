@@ -15,7 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
-      - uses: actions/checkout@v3
+      - name: check-environment-existence
+        id: check-environment-existence
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
+          script: |
+            let res = await github.rest.repos.getAllEnvironments({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            })
+​
+            if (res.data.environments.length > 0) {
+              if(!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
+                core.setFailed('The environment does not exists!')
+              }
+            }
+
+      - uses: actions/checkout@v2
       - name: check-branch-existence
         id: check-branch-existence
         uses: actions/github-script@v6
@@ -38,11 +55,11 @@ jobs:
 
       - name: exec-export-unpack-commit-solution-workflow
         id: exec-export-unpack-commit-solution-workflow
-        uses: actions/github-script@v6
+        uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
               solution_name: '${{ secrets.SOLUTION_NAME }}',
@@ -51,13 +68,13 @@ jobs:
               branch_to_create: '${{ secrets.BRANCH_TO_CREATE }}',
               commit_message: '${{ env.commit_message }}'
             }
-            sleep.dispatchWorkflow(github, context, 'export-unpack-commit-solution.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'export-unpack-commit-solution.yml', ref, params)
 
       - name: check-workflow-status
         id: check-workflow-status
-        uses: actions/github-script@v6
+        uses: actions/github-script@v5
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            await sleep.checkworkflow(github, context, 'export-unpack-commit-solution.yml')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
+            await helper.checkWorkflowStatus(github, context, core, 'export-unpack-commit-solution.yml')
