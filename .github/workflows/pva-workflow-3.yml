@@ -37,7 +37,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let helper = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             await helper.checkWorkflowStatus(github, context, core, 'pva-workflow-2.yml')
 
   delete-and-import-unmanaged-solution:
