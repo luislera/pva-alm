@@ -30,12 +30,14 @@ runs:
       shell: bash
       run: |
         echo "::add-mask::${{ inputs.environment_url }}"
+
     - run: |
         git fetch --all --tags
         $commit = git rev-list -n 1 tags/${{ inputs.tag }}
         echo "commit=$commit" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       shell: pwsh
       if: ${{ inputs.tag != '' }}
+
     - name: download-artifact
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -63,8 +65,10 @@ runs:
         else {
           $files = Get-ChildItem -Path "${{ runner.temp }}/${{ inputs.solution_name }}" -Recurse | Where-Object{$_.Name.EndsWith('_managed.zip')}
         }
+
         $solutionZip = $files[0].FullName
         echo "::set-output name=solution_zip::$solutionZip"
+
     - name: import-solution-to-environment
       uses: microsoft/powerplatform-actions/import-solution@latest
       with:
