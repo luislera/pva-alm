@@ -42,6 +42,7 @@ jobs:
 
   delete-and-import-unmanaged-solution:
     runs-on: ubuntu-latest
+    needs: execute-pva-workflow-2
     environment: ${{ github.event.inputs.target_environment }}
     steps:
       - uses: actions/checkout@v2

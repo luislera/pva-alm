@@ -7,7 +7,7 @@ on:
         description: "GitHub tag for solution-version to deploy"
       environment:
         required: true
-        description: "GitHub environment name to deploy to"
+        description: "GitHub environment name to deploy the solution"
         default: PRD
 env:
   workflow_scripts_path: .github/workflows/scripts
