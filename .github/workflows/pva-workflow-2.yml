@@ -14,53 +14,52 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: run-pva-workflow-1
         id: run-pva-workflow-1
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
               environment: '${{ github.event.inputs.environment }}',
             }
-            sleep.dispatchWorkflow(github, context, 'pva-workflow-1.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'pva-workflow-1.yml', ref, params)
 
       - name: check-pva-workflow-1-status
         id: check-pva-workflow-1-status
         uses: actions/github-script@v6
         with:
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            await sleep.checkworkflow(github, context, 'pva-workflow-1.yml')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
+            await helper.checkWorkflowStatus(github, context, core, 'pva-workflow-1.yml')
 
   sync-from-main-branch:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     needs: execute-pva-workflow-1
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v2
       - name: sync-from-main
         id: sync-from-main
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
               from_branch: '${{ secrets.SOURCE_BRANCH }}',
               to_branch: '${{ secrets.BRANCH_TO_CREATE }}'
             }
-            sleep.dispatchWorkflow(github, context, 'sync-from-main.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'sync-from-main.yml', ref, params)
 
       - name: check-sync-from-main-workflow-status
         id: check-sync-from-main-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            await sleep.checkworkflow(github, context, 'sync-from-main.yml')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
+            await helper.checkWorkflowStatus(github, context, 'sync-from-main.yml')

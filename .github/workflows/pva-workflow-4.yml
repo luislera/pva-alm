@@ -16,29 +16,25 @@ jobs:
   trigger-deploy-tagged-solution:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: deploy-tagged-solution-to-environment
         id:  deploy-tagged-solution-to-environment
         uses: actions/github-script@v6
         with:
-          # Workflows cannot be dispatched with the standard GITHUB_TOKEN, so we use a token that can
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
               tag: '${{ github.event.inputs.tag }}',
               environment: '${{ github.event.inputs.environment }}'
             }
-            sleep.dispatchWorkflow(github, context, 'deploy-tagged-solution-to-environment.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'deploy-tagged-solution-to-environment.yml', ref, params)
 
       - name: check-workflow-status
         id: check-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
-            let sleep = require('${{ env.workflow_scripts_path }}/js/Sleep.js')
-            let result = await sleep.checkworkflow(github, context, 'deploy-tagged-solution-to-environment.yml')
-            if (result != 'success') {
-              core.setFailed('workflow failed')
-            }
+            let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
+            await helper.checkWorkflowStatus(github, context, core, 'deploy-tagged-solution-to-environment.yml')
