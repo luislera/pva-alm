@@ -27,9 +27,13 @@ jobs:
                 head: '${{ github.event.inputs.from_branch }}',
                 base: '${{ github.event.inputs.to_branch }}'
               })
+              console.log('Merge completed successfully')
             }
             catch (err) {
               if (err.response.status == 409 || err.response.status == 422) {
                 core.setFailed('Merge failed. Error: ' + err.response.data.message)
+              }
+              else if (err.response.status == 204) {
+                console.log('No changes found to merge.')
               }
             }
