@@ -21,6 +21,15 @@ jobs:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             try {
+              /*
+                HTTP response status codes
+                --------------------------
+                201: Successfull response
+                204: Already merge response
+                409: Conflict when there is a merge conflict
+                422: Validation failed
+              */
+
               let merge = await github.rest.repos.merge({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -35,8 +44,6 @@ jobs:
               }
             }
             catch (err) {
-              //409: Conflict when there is a merge conflict
-              //422: Validation failed
               if (err.response.status == 409 || err.response.status == 422) {
                 core.setFailed('Merge failed. Error: ' + err.response.data.message)
               }
