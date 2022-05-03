@@ -21,7 +21,7 @@ jobs:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             let res = null;
-            try {
+            //try {
               res = await github.rest.repos.merge({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -32,11 +32,11 @@ jobs:
 
               console.log('res')
               console.log(res)
-            }
-            catch (err) {
+            //}
+            /*catch (err) {
               console.log('err')
               console.log(err)
               //console.log(err.response.status)
               //console.log(err.response.data.message)
               //console.log(err.response.data.errors[0].message)
-            }
+            }*/
