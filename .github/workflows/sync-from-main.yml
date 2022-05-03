@@ -35,6 +35,8 @@ jobs:
               }
             }
             catch (err) {
+              //409: Conflict when there is a merge conflict
+              //422: Validation failed
               if (err.response.status == 409 || err.response.status == 422) {
                 core.setFailed('Merge failed. Error: ' + err.response.data.message)
               }
