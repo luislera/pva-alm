@@ -28,7 +28,7 @@ jobs:
                 base: '${{ github.event.inputs.to_branch }}'
               })
               console.log('Merge completed successfully')
-              console.log(merge.response)
+              console.log(merge)
             }
             catch (err) {
               if (err.response.status == 409 || err.response.status == 422) {
