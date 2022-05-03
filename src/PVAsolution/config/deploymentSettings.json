@@ -8,7 +8,7 @@
   "ConnectionReferences": [
     {
       "LogicalName": "cr132_connReference1",
-      "ConnectionId": "#{CONN_REFERENCE1}#",
+      "ConnectionId": "#{CONN_REFERENCE}#",
       "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_office365users"
     }
   ]
