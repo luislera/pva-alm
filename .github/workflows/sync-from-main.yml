@@ -20,8 +20,9 @@ jobs:
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
+            let res = null;
             try {
-              let res = await github.rest.pulls.create({
+              res = await github.rest.pulls.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 head: '${{ github.event.inputs.from_branch }}',
@@ -32,5 +33,5 @@ jobs:
               console.log(res)
             }
             catch (err) {
-              console.log(err)
+              console.log(res)
             }
