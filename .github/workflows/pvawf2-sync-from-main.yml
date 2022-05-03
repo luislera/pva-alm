@@ -1,4 +1,4 @@
-name: pva-workflow-2
+name: pvawf2-sync-from-main
 on:
   workflow_dispatch:
     inputs:

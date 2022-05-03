@@ -1,4 +1,4 @@
-name: pva-workflow-4
+name: pvawf4-deploy-tagged-solution-to-environment
 on:
   workflow_dispatch:
     inputs:
