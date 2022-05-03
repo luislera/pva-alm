@@ -20,12 +20,17 @@ jobs:
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
-            let res = await github.rest.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: '${{ github.event.inputs.from_branch }}',
-              base: '${{ github.event.inputs.to_branch }}',
-              title: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
-            })
+            try {
+              let res = await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: '${{ github.event.inputs.from_branch }}',
+                base: '${{ github.event.inputs.to_branch }}',
+                title: '[PR] ${{ github.event.inputs.from_branch }} into ${{ github.event.inputs.to_branch }}'
+              })
 
-            console.log(res)
+              console.log(res)
+            }
+            catch (err) {
+              console.log(err)
+            }
