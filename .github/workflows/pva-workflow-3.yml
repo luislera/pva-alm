@@ -59,7 +59,7 @@ jobs:
               environment_url: '${{ secrets.ENVIRONMENT_URL }}',
               ref: '${{ github.ref }}'
             }
-            await helper.dispatchWorkflow(github, context, 'delete-and-import-unmanaged-solution.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'import-unmanaged-solution.yml', ref, params)
 
       - name: check-delete-and-import-unmanaged-solution-workflow-status
         id: check-delete-and-import-unmanaged-solution-workflow-status
@@ -67,4 +67,4 @@ jobs:
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'delete-and-import-unmanaged-solution.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'import-unmanaged-solution.yml')
