@@ -1,4 +1,4 @@
-name: pva-workflow-3
+name: pvawf3-delete-and-import-unmanaged-solution
 on:
   workflow_dispatch:
     inputs:
