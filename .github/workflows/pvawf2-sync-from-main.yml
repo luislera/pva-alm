@@ -1,4 +1,4 @@
-name: pva-workflow-2
+name: pvawf2-sync-from-main
 on:
   workflow_dispatch:
     inputs:
@@ -10,13 +10,13 @@ env:
   workflow_scripts_path: .github/workflows/scripts
 
 jobs:
-  execute-pva-workflow-1:
+  execute-pvawf1-export-unpack-commit-solution-workflow:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
-      - name: run-pva-workflow-1
-        id: run-pva-workflow-1
+      - name: run-pvawf1-export-unpack-commit-solution-workflow
+        id: run-pvawf1-export-unpack-commit-solution-workflow
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
@@ -26,20 +26,20 @@ jobs:
             let params = {
               environment: '${{ github.event.inputs.environment }}',
             }
-            await helper.dispatchWorkflow(github, context, 'pva-workflow-1.yml', ref, params)
+            await helper.dispatchWorkflow(github, context, 'pvawf1-export-unpack-commit-solution-workflow.yml', ref, params)
 
-      - name: check-pva-workflow-1-status
-        id: check-pva-workflow-1-status
+      - name: check-pvawf1-export-unpack-commit-solution-workflow-status
+        id: check-pvawf1-export-unpack-commit-solution-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'pva-workflow-1.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'pvawf1-export-unpack-commit-solution-workflow.yml')
 
   sync-from-main-branch:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
-    needs: execute-pva-workflow-1
+    needs: execute-pvawf1-export-unpack-commit-solution-workflow
     steps:
       - uses: actions/checkout@v2
       - name: sync-from-main
