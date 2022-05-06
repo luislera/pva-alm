@@ -1,0 +1,71 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sendmail": {
+        "api": {
+          "name": "shared_sendmail"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "cr132_sharedsendmail_0fbc6"
+        },
+        "runtimeSource": "invoker"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+        "Send_an_email_notification_(V3)": {
+          "inputs": {
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+              "connectionName": "shared_sendmail",
+              "operationId": "SendEmailV3"
+            },
+            "parameters": {
+              "request/subject": "Subject",
+              "request/text": "<p>mail body</p>",
+              "request/to": "luis.lera@southworks.com"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "78e3967e-ba82-4aac-994a-84bff34f3b9d"
+          },
+          "runAfter": {},
+          "type": "OpenApiConnection"
+        }
+      },
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "inputs": {
+            "schema": {
+              "properties": {},
+              "required": [],
+              "type": "object"
+            }
+          },
+          "kind": "Button",
+          "metadata": {
+            "operationMetadataId": "a5da77b6-3097-41b9-af9e-b4a0d2e2cc49"
+          },
+          "type": "Request"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
