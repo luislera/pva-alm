@@ -1,0 +1,70 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_msnweather": {
+        "api": {
+          "name": "shared_msnweather"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "cr132_sharedmsnweather_8e461"
+        },
+        "runtimeSource": "invoker"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+        "Get_forecast_for_today": {
+          "inputs": {
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_msnweather",
+              "connectionName": "shared_msnweather",
+              "operationId": "TodaysForecast"
+            },
+            "parameters": {
+              "Location": "new york",
+              "units": "Metric"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9bbf096e-07f3-4564-9033-0291e5f3a6e0"
+          },
+          "runAfter": {},
+          "type": "OpenApiConnection"
+        }
+      },
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "inputs": {
+            "schema": {
+              "properties": {},
+              "required": [],
+              "type": "object"
+            }
+          },
+          "kind": "Button",
+          "metadata": {
+            "operationMetadataId": "c3ea921b-9d81-4f7e-9cec-0c096a0e17ae"
+          },
+          "type": "Request"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,8 @@
+<botcomponent schemaname="new_topic_ddf7f6e876bc436ca644f6a9654396fb_d2198a5ee41a48a5bf70ab8970145a9f_confirmedfailure">
+  <componenttype>0</componenttype>
+  <description>System Intent Confirmed Failure</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Confirmed Failure</name>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>
