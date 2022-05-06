@@ -1,0 +1,15 @@
+{
+  "EnvironmentVariables": [],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "cr132_sharedmsnweather_8e461",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_msnweather"
+    },
+    {
+      "LogicalName": "cr132_sharedsendmail_0fbc6",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+    }
+  ]
+}
