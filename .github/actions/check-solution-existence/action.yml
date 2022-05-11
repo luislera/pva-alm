@@ -26,7 +26,9 @@ runs:
       with:
         nuget-version: '5.x'
     - name: install-pac-cli-nugget
-      run: nuget install Microsoft.PowerApps.CLI
+      run: |
+        nuget install Microsoft.PowerApps.CLI
+        dir
       shell: pwsh
     - name: create-environment-authentication
       run: dir
