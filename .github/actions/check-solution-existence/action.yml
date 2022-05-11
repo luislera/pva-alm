@@ -31,7 +31,5 @@ runs:
         $nugetFolder = Get-ChildItem "pac" | Where-Object {$_.Name -match "Microsoft.PowerApps.CLI."}
         $pacFolder = $nugetFolder.FullName + "\tools"
         echo $pacFolder
-      shell: pwsh
-    - name: create-environment-authentication
-      run: dir
+        & "$pacFolder\pac.exe"
       shell: pwsh
