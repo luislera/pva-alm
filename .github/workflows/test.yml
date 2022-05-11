@@ -10,16 +10,17 @@ env:
   workflow_scripts_path: .github/workflows/scripts
 
 jobs:
-  test:
+  build-deploy-solution:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
-      - name: build-solution
+
+      - name: check-solution
         uses: ./.github/actions/check-solution-existence
         with:
           solution_name: '${{ secrets.SOLUTION_NAME }}',
           environment_url: '${{ secrets.ENVIRONMENT_URL }}',
           tenant_id: '${{ secrets.TENANT_ID }}',
           client_id: '${{ secrets.CLIENT_ID }}',
-          client_secret: '${{ secrets.CLIENT_SECRET }}',
+          client_secret: '${{ secrets.CLIENT_SECRET }}'
