@@ -31,6 +31,6 @@ runs:
         $nugetFolder = Get-ChildItem "pac" | Where-Object {$_.Name -match "Microsoft.PowerApps.CLI."}
         $pacFolder = $nugetFolder.FullName + "\tools"
         echo $pacFolder
-        echo "$pacFolder\pac.exe auth create --url " & ${{ inputs.environment_url }} & " --tenant " & ${{ inputs.tenant_id }} & " --applicationId  " & ${{ inputs.client_id }} & " --clientSecret " & ${{ inputs.client_secret }}
+        $test = "$pacFolder\pac.exe auth create --url ${{ inputs.environment_url }}"
 
       shell: pwsh
