@@ -19,4 +19,6 @@ jobs:
       - name: check-solution
         uses: ./.github/actions/check-solution-existence
         with:
+          solution_name: '${{ secrets.SOLUTION_NAME }}'
+          environment_url: '${{ secrets.ENVIRONMENT_URL }}'
           secrets: ${{ toJSON(secrets) }}

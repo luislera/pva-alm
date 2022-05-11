@@ -3,6 +3,12 @@ name: check-solution-existence
 description: check-solution-existence
 
 inputs:
+  solution_name:
+    description: solution_name
+    required: true
+  environment_url:
+    description: environment_url
+    required: true
   secrets:
     description: "environment secrets"
     required: true
