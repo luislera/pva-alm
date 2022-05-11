@@ -47,6 +47,9 @@ const checkWorkflowStatus = (github, context, core, workflow, delay, retry = 1) 
     if (status != 'success') {
       core.setFailed(status)
     }
+    else {
+      console.log(workflow + ' was executed successfully')
+    }
   })
   .catch(function (status) {
     if (status != 'completed') {
