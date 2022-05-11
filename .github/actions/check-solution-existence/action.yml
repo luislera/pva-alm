@@ -28,7 +28,9 @@ runs:
     - name: install-pac-cli-nugget
       run: |
         nuget install Microsoft.PowerApps.CLI -OutputDirectory pac
-        dir .\pac\
+        $nugetFolder = Get-ChildItem "pac" | Where-Object {$_.Name -match "Microsoft.PowerApps.CLI."}
+        $pacFolder = $nugetFolder.FullName + "\tools"
+        echo $pacFolder
       shell: pwsh
     - name: create-environment-authentication
       run: dir
