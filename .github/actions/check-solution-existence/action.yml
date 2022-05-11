@@ -28,3 +28,6 @@ runs:
     - name: install-pac-cli-nugget
       run: nuget install Microsoft.PowerApps.CLI
       shell: pwsh
+    - name: create-environment-authentication
+      run: dir
+      shell: pwsh
