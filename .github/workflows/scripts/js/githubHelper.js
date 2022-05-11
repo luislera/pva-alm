@@ -8,43 +8,52 @@ const dispatchWorkflow = async (github, context, id, reference, parameters) => {
   })
 }
 
-const checkWorkflowStatus = async (github, context, core, id) => {
-  let currentStatus = null;
-  let conclusion = null;
-  let html_url = null;
-  sleep(2000)
+const listWorkflowRuns = async (github, context, workflow) => {
+  let workflowLog = await github.rest.actions.listWorkflowRuns({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    workflow_id: workflow,
+    per_page: 1
+  })
 
-  console.log('Checking the status for workflow ' + id)
-  do {
-    let workflowLog = await github.rest.actions.listWorkflowRuns({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      workflow_id: id,
-      per_page: 1
-    })
-    if (workflowLog.data.total_count > 0) {
-      currentStatus = workflowLog.data.workflow_runs[0].status
-      conclusion = workflowLog.data.workflow_runs[0].conclusion
-      html_url = workflowLog.data.workflow_runs[0].html_url
-    }
-    else {
-      break
-    }
-    console.log(new Date().toISOString() + ' - status: ' + currentStatus)
-    sleep(20000)
-  } while (currentStatus != 'completed');
-
-  if (conclusion != 'success') {
-    core.setFailed('Workflow execution failed. For more details go to ' + html_url)
+  if (workflowLog.data.total_count > 0) {
+    return workflowLog.data.workflow_runs[0]
+  }
+  else {
+    return null
   }
 }
 
-const sleep = (milliseconds) => {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+const checkStatus = async (github, context, workflow) => {
+  let result = await listWorkflowRuns(github, context, workflow)
+  return new Promise((resolve, reject) => {
+    if (result.status != 'completed') {
+      reject(result.status)
+    }
+    else {
+      if (result.conclusion != 'success') {
+        resolve('Workflow execution failed. For more information go to ' + result.html_url)
+      }
+      else {
+        resolve(result.conclusion)
+      }
+    }
+  })
+}
+
+const checkWorkflowStatus = (github, context, core, workflow, delay, retry = 1) => {
+  checkStatus(github, context, workflow)
+  .then(status => {
+    if (status != 'success') {
+      core.setFailed(status)
+    }
+  })
+  .catch(function (status) {
+    if (status != 'completed') {
+      console.log(new Date().toISOString() + ' - status: ' + status)
+      setTimeout(() => checkWorkflowStatus(github, context, core, workflow, delay, retry + 1), delay)
+    }
+  })
 }
 
 module.exports = {

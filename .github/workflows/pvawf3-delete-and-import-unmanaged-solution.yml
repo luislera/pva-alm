@@ -32,13 +32,17 @@ jobs:
             }
             await helper.dispatchWorkflow(github, context, 'pvawf2-sync-from-main.yml', ref, params)
 
+      - name: wait-workflow-dispatch-ends
+        run: |
+          sleep 5
+
       - name: check-pvawf2-sync-from-main-workflow-status
         id: check-pvawf2-sync-from-main-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'pvawf2-sync-from-main.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'pvawf2-sync-from-main.yml', 20000)
 
   import-unmanaged-solution:
     runs-on: ubuntu-latest
@@ -61,13 +65,17 @@ jobs:
             }
             await helper.dispatchWorkflow(github, context, 'import-unmanaged-solution.yml', ref, params)
 
+      - name: wait-workflow-dispatch-ends
+        run: |
+          sleep 5
+
       - name: check-import-unmanaged-solution-workflow-status
         id: check-import-unmanaged-solution-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'import-unmanaged-solution.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'import-unmanaged-solution.yml', 20000)
 
   delete-and-import-unmanaged-solution:
     runs-on: ubuntu-latest
@@ -90,10 +98,14 @@ jobs:
             }
             await helper.dispatchWorkflow(github, context, 'delete-and-import-unmanaged-solution.yml', ref, params)
 
+      - name: wait-workflow-dispatch-ends
+        run: |
+          sleep 5
+
       - name: check-delete-and-import-unmanaged-solution-workflow-status
         id: check-delete-and-import-unmanaged-solution-workflow-status
         uses: actions/github-script@v6
         with:
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'delete-and-import-unmanaged-solution.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'delete-and-import-unmanaged-solution.yml', 20000)

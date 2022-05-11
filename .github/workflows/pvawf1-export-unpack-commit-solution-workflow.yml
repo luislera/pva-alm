@@ -74,6 +74,10 @@ jobs:
             }
             await helper.dispatchWorkflow(github, context, 'export-unpack-commit-solution.yml', ref, params)
 
+      - name: wait-workflow-dispatch-ends
+        run: |
+          sleep 5
+
       - name: check-workflow-status
         id: check-workflow-status
         uses: actions/github-script@v6
@@ -81,4 +85,4 @@ jobs:
           github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
           script: |
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
-            await helper.checkWorkflowStatus(github, context, core, 'export-unpack-commit-solution.yml')
+            await helper.checkWorkflowStatus(github, context, core, 'export-unpack-commit-solution.yml', 20000)
