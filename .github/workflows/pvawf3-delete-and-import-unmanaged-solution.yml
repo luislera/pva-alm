@@ -10,7 +10,10 @@ on:
         description: "GitHub environment name to import the solution"
         required: true
         default: "PR"
-
+      commit_message:
+        description: "commit message"
+        required: true
+        default: "default commit message"
 env:
   workflow_scripts_path: .github/workflows/scripts
 
@@ -28,7 +31,8 @@ jobs:
             let helper = require('${{ env.workflow_scripts_path }}/js/githubHelper.js')
             let ref = '${{ github.ref }}'
             let params = {
-              environment: '${{ github.event.inputs.source_environment }}'
+              environment: '${{ github.event.inputs.source_environment }}',
+              commit_message: '${{ github.event.inputs.commit_message }}'
             }
             await helper.dispatchWorkflow(github, context, 'pvawf2-sync-from-main.yml', ref, params)
 

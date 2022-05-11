@@ -6,6 +6,10 @@ on:
         description: "GitHub environment name to get the solution"
         required: true
         default: "DEV"
+      commit_message:
+        description: "commit message"
+        required: true
+        default: "default commit message"
 env:
   workflow_scripts_path: .github/workflows/scripts
 
@@ -25,6 +29,7 @@ jobs:
             let ref = '${{ github.ref }}'
             let params = {
               environment: '${{ github.event.inputs.environment }}',
+              commit_message: '${{ github.event.inputs.commit_message }}'
             }
             await helper.dispatchWorkflow(github, context, 'pvawf1-export-unpack-commit-solution-workflow.yml', ref, params)
 
