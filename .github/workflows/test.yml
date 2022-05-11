@@ -19,8 +19,8 @@ jobs:
       - name: check-solution
         uses: ./.github/actions/check-solution-existence
         with:
-          solution_name: '${{ secrets.SOLUTION_NAME }}',
-          environment_url: '${{ secrets.ENVIRONMENT_URL }}',
-          tenant_id: '${{ secrets.TENANT_ID }}',
-          client_id: '${{ secrets.CLIENT_ID }}',
+          solution_name: '${{ secrets.SOLUTION_NAME }}'
+          environment_url: '${{ secrets.ENVIRONMENT_URL }}'
+          tenant_id: '${{ secrets.TENANT_ID }}'
+          client_id: '${{ secrets.CLIENT_ID }}'
           client_secret: '${{ secrets.CLIENT_SECRET }}'
