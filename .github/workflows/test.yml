@@ -8,25 +8,18 @@ on:
         default: "DEV"
 env:
   workflow_scripts_path: .github/workflows/scripts
-  commit_message: "default commit message"
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
-      - name: check-env-existence
-        id: check-env-existence
-        uses: actions/github-script@v6
+      - uses: actions/checkout@v2
+      - name: build-solution
+        uses: ./.github/actions/check-solution-existence
         with:
-          github-token: ${{secrets.WORKFLOW_DISPATCH_TOKEN}}
-          script: |
-            let res = await github.rest.repos.getAllEnvironments({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            })
-
-            if (res.data.environments.length > 0) {
-              if (!res.data.environments.find(env => env.name === '${{ github.event.inputs.environment }}')) {
-                core.setFailed('The environment does not exists.')
-              }
-            }
+          solution_name: '${{ secrets.SOLUTION_NAME }}',
+          environment_url: '${{ secrets.ENVIRONMENT_URL }}',
+          tenant_id: '${{ secrets.TENANT_ID }}',
+          client_id: '${{ secrets.CLIENT_ID }}',
+          client_secret: '${{ secrets.CLIENT_SECRET }}',
