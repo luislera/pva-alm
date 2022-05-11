@@ -3,25 +3,16 @@ name: check-solution-existence
 description: check-solution-existence
 
 inputs:
-  solution_name:
-    description: solution_name
-    required: true
-  environment_url:
-    description: environment_url
-    required: true
-  tenant_id:
-    description: tenant_id
-    required: true
-  client_id:
-    description: client_id
-    required: true
-  client_secret:
-    description: client_secret
+  secrets:
+    description: "environment secrets"
     required: true
 
 runs:
   using: "composite"
   steps:
+    - uses: Firenza/secrets-to-env@v1.1.0
+      with:
+        secrets: ${{ inputs.secrets }}
     - uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.x'
@@ -33,4 +24,4 @@ runs:
         echo $pacFolder
         $test = "$pacFolder\pac.exe auth create --url ${{ inputs.environment_url }}"
         echo $test
-      shell: pwsh
+      shell: powershell
