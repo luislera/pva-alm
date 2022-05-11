@@ -32,5 +32,5 @@ runs:
         $pacFolder = $nugetFolder.FullName + "\tools"
         echo $pacFolder
         $test = "$pacFolder\pac.exe auth create --url ${{ inputs.environment_url }}"
-
+        echo $test
       shell: pwsh
